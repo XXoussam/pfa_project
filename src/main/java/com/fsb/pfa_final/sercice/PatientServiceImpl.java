@@ -55,6 +55,11 @@ public class PatientServiceImpl implements IPatientService{
 				c.getPatient().getConsultationList().remove(c);
 			}
 		}
+		for(User ur : userRepository.findAll()){
+			if (ur.getUsername().equals(patientRepository.getById(id).getNomP())){
+				userRepository.delete(ur);
+			}
+		}
 		patientRepository.deleteById(id);
 	}
 

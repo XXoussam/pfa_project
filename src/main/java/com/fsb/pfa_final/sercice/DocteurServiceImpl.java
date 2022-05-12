@@ -204,7 +204,13 @@ public class DocteurServiceImpl implements IDocteurService {
             consutationRepository.deleteById(c.getId());
             c.getPatient().getConsultationList().remove(c);
         }
+        for(User ur : userRepository.findAll()){
+            if (ur.getUsername().equals(d.getNom())){
+                userRepository.delete(ur);
+            }
+        }
         docteurRepository.deleteById(idDoct);
+
     }
 
     @Override
