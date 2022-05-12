@@ -1,11 +1,13 @@
 package com.fsb.pfa_final.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Entity @Data
+@Entity @Data @AllArgsConstructor @NoArgsConstructor
 public class Patient {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private  long idP;  
@@ -19,23 +21,9 @@ public class Patient {
     private  String telP ;
 	@Column
     private String adresseP ;
+	private String password;
 	@OneToMany(cascade = CascadeType.REMOVE)
 	private List<Consultation> consultationList;
-
-
-	public Patient(long idP, String prenomP, String nomP, String emailP, String telP, String adresseP, List<Consultation> consultationList) {
-		this.idP = idP;
-		this.prenomP = prenomP;
-		this.nomP = nomP;
-		this.emailP = emailP;
-		this.telP = telP;
-		this.adresseP = adresseP;
-		this.consultationList = consultationList;
-	}
-
-	public Patient() {
-	}
-
 
 
 	@Override

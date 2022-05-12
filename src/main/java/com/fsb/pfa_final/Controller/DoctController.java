@@ -36,7 +36,7 @@ public class DoctController {
         return iDocteurService.findDocterBySpecialite(name);
     }
 
-    @PostMapping(value = "/addDoctor")
+    @RequestMapping(value = "/addDoctor",method = RequestMethod.POST)
     public void addDoctor(@RequestBody Docteur docteur) {
         iDocteurService.addDoctor(docteur);
     }

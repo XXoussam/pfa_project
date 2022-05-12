@@ -1,13 +1,12 @@
 package com.fsb.pfa_final.sercice;
-import com.fsb.pfa_final.Repositories.ConsutationRepository;
-import com.fsb.pfa_final.Repositories.DocteurRepository;
-import com.fsb.pfa_final.Repositories.PatientRepository;
-import com.fsb.pfa_final.Repositories.SpecieliteRepository;
+import com.fsb.pfa_final.Repositories.*;
+import com.fsb.pfa_final.config.User;
 import com.fsb.pfa_final.entities.Consultation;
 import com.fsb.pfa_final.entities.Docteur;
 import com.fsb.pfa_final.entities.Patient;
 import com.fsb.pfa_final.entities.Specialite;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
@@ -27,6 +26,10 @@ public class DocteurServiceImpl implements IDocteurService {
     ConsutationRepository consutationRepository;
     @Autowired
     PatientRepository patientRepository;
+    @Autowired
+    UserRepository userRepository;
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public ArrayList<Specialite> findListspecByIdDoct(Long idDoct) {
         ArrayList<Specialite> sps = new ArrayList<>();
@@ -65,7 +68,9 @@ public class DocteurServiceImpl implements IDocteurService {
                                          consultation.getPatient().getNomP(),
                                          consultation.getPatient().getEmailP(),
                                          consultation.getPatient().getTelP(),
-                                         consultation.getPatient().getAdresseP(),null));
+                                         consultation.getPatient().getAdresseP(),
+                                         null,
+                             null));
                 css.add(c);
             }
             docteur.setConsultationList(css);
@@ -165,6 +170,8 @@ public class DocteurServiceImpl implements IDocteurService {
                 }
             }
             docteurRepository.save(docteur);
+            User user = new User(0L,docteur.getNom(), encoder.encode(docteur.getPassword()), true,"DOCTOR");
+            userRepository.save(user);
         } else throw new RuntimeException("you should have a spepcialite");
     }
 

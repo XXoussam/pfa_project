@@ -1,9 +1,7 @@
 package com.fsb.pfa_final;
 
-import com.fsb.pfa_final.Repositories.ConsutationRepository;
-import com.fsb.pfa_final.Repositories.DocteurRepository;
-import com.fsb.pfa_final.Repositories.PatientRepository;
-import com.fsb.pfa_final.Repositories.SpecieliteRepository;
+import com.fsb.pfa_final.Repositories.*;
+import com.fsb.pfa_final.config.User;
 import com.fsb.pfa_final.entities.Consultation;
 import com.fsb.pfa_final.entities.Docteur;
 import com.fsb.pfa_final.entities.Patient;
@@ -12,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,8 +27,10 @@ public class PfaFinalApplication {
     CommandLineRunner commandLineRunner(DocteurRepository docteurRepository,
                                         SpecieliteRepository specieliteRepository,
                                         ConsutationRepository consutationRepository,
-                                        PatientRepository patientRepository) {
+                                        PatientRepository patientRepository,
+                                        UserRepository userRepository) {
         return args -> {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
             Specialite s1 = new Specialite(null, "Allergy and Immunology", null);
             Specialite s2 = new Specialite(null, "Anesthesiology", null);
@@ -119,10 +120,10 @@ public class PfaFinalApplication {
 
 
 
-            Patient p1=new Patient(0L,"temimi","ahmed","ahmed11@gmail.com","24225598","kjsdljklfkj",l1);
-            Patient p2=new Patient(0L,"saoudi","assma","ass22@gmail.com","99255598","gmana",l2);
-            Patient p3=new Patient(0L,"saoudi","oussama","oussama13@gmail.com","25919997","benikhdech",l3);
-            Patient p4=new Patient(0L,"njr","amina","amii99@gmail.com","24225322","gasrr",l4);
+            Patient p1=new Patient(0L,"temimi","ahmed","ahmed11@gmail.com","24225598","kjsdljklfkj","kjùlkjùljù",l1);
+            Patient p2=new Patient(0L,"saoudi","assma","ass22@gmail.com","99255598","gmana","lhkjhmhjm",l2);
+            Patient p3=new Patient(0L,"saoudi","oussama","oussama13@gmail.com","25919997","benikhdech","ùlkjkmjhlhl",l3);
+            Patient p4=new Patient(0L,"njr","amina","amii99@gmail.com","24225322","gasrr","ùkljlkjlkj",l4);
             patientRepository.save(p1);
             patientRepository.save(p2);
             patientRepository.save(p3);
@@ -158,6 +159,23 @@ public class PfaFinalApplication {
             consutationRepository.save(c5);
             consutationRepository.save(c6);
 
+            User user1=new User(0L,d1.getNom(),encoder.encode(d1.getPassword()),true,"DOCTOR");
+            User user2=new User(0L,d2.getNom(),encoder.encode(d2.getPassword()),true,"DOCTOR");
+            User user3=new User(0L,d3.getNom(),encoder.encode(d3.getPassword()), true,"DOCTOR");
+            User user4=new User(0L,p1.getNomP(),encoder.encode(p1.getPassword()), true,"PATIENT");
+            User user5=new User(0L,p2.getNomP(),encoder.encode(p2.getPassword()), true,"PATIENT");
+            User user6=new User(0L,p3.getNomP(),encoder.encode(p3.getPassword()), true,"PATIENT");
+            User user7=new User(0L,p4.getNomP(),encoder.encode(p4.getPassword()), true,"PATIENT");
+            User user8=new User(0L,"admin",encoder.encode("nimda"), true,"ADMIN");
+
+            userRepository.save(user1);
+            userRepository.save(user2);
+            userRepository.save(user3);
+            userRepository.save(user4);
+            userRepository.save(user5);
+            userRepository.save(user6);
+            userRepository.save(user7);
+            userRepository.save(user8);
 
         };
 

@@ -4,10 +4,13 @@ package com.fsb.pfa_final.sercice;
 import com.fsb.pfa_final.Repositories.DocteurRepository;
 import com.fsb.pfa_final.Repositories.PatientRepository;
 import com.fsb.pfa_final.Repositories.ConsutationRepository;
+import com.fsb.pfa_final.Repositories.UserRepository;
+import com.fsb.pfa_final.config.User;
 import com.fsb.pfa_final.entities.Consultation;
 import com.fsb.pfa_final.entities.Docteur;
 import com.fsb.pfa_final.entities.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +25,11 @@ public class PatientServiceImpl implements IPatientService{
 	PatientRepository patientRepository;
 	@Autowired
 	ConsutationRepository consutationRepository;
+
+	BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+	@Autowired
+	UserRepository userRepository;
 	
 	@Override
 	public List<Patient> showAllPatient(){
@@ -34,7 +42,9 @@ public class PatientServiceImpl implements IPatientService{
 
 	@Override
 	public void addPatient(Patient p) {
-	patientRepository.save(p); 	
+	patientRepository.save(p);
+		User user = new User(0L,p.getNomP(), encoder.encode(p.getPassword()),true,"PATIENT");
+		userRepository.save(user);
 	}
 
 	@Override
@@ -61,6 +71,8 @@ public class PatientServiceImpl implements IPatientService{
 			p2.setAdresseP(p.getAdresseP());
 		if(p.getEmailP()!=null)
 			p2.setEmailP(p.getEmailP());
+		if (p.getPassword()!=null)
+			p2.setPassword(p.getPassword());
 		patientRepository.save(p2); 
 		
 	}
@@ -93,6 +105,7 @@ public class PatientServiceImpl implements IPatientService{
 		p1.setEmailP(p.getEmailP());
 		p1.setAdresseP(p.getAdresseP());
 		p1.setTelP(p.getTelP());
+		p1.setPassword(p.getPassword());
 		p1.setConsultationList(l1);
 
 		return p1;
